@@ -19,6 +19,13 @@ class SidebarDrawer extends StatelessWidget {
               title: 'My Tickets',
               navigateToRoute: kMyTicketsRoute,
             ),
+            Expanded(
+              child: Container(),
+            ),
+            SidebarButton(
+              title: 'For organizers',
+              navigateToRoute: kOrganizerLoginRoute,
+            )
           ],
         ),
       ),

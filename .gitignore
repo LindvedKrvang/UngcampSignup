@@ -47,3 +47,6 @@ app.*.map.json
 
 # Ignore the google-services.json for connectiong to Firebase
 **/google-services.json
+
+# Ignore auth-details
+**/auth-details.dart
