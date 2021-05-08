@@ -12,7 +12,6 @@ class _EventsState extends State<Events> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text('Ungcamp - Events overview'),
       ),
