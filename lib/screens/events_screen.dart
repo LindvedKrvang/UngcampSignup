@@ -4,7 +4,7 @@ import 'package:ungcamp_signup/models/auth-details.dart';
 import 'package:ungcamp_signup/screens/sidebar-drawer.dart';
 
 class Events extends StatefulWidget {
-  const Events({Key key}) : super(key: key);
+  const Events({Key? key}) : super(key: key);
 
   @override
   _EventsState createState() => _EventsState();

@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ungcamp_signup/models/auth-details.dart';
 import 'package:ungcamp_signup/models/routes.dart';
 
 class SidebarDrawer extends StatelessWidget {
-  const SidebarDrawer({Key key}) : super(key: key);
+  SidebarDrawer({Key? key}) : super(key: key);
+
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,8 @@ class SidebarDrawer extends StatelessWidget {
             SidebarButton(
               title: 'For organizers',
               navigateToRoute: kOrganizerLoginRoute,
+              navigateToSecondRoute: kOrganizerOverviewRoute,
+              shouldNavigateToSecondRoute: _auth.currentUser != null && _auth.currentUser!.email != kAnonymousUserEmail,
             )
           ],
         ),
@@ -37,14 +43,21 @@ class SidebarButton extends StatelessWidget {
 
   final String title;
   final String navigateToRoute;
+  final String? navigateToSecondRoute;
+  final bool? shouldNavigateToSecondRoute;
 
-  SidebarButton({@required this.title, @required this.navigateToRoute});
+  SidebarButton({
+    required this.title,
+    required this.navigateToRoute,
+    this.navigateToSecondRoute,
+    this.shouldNavigateToSecondRoute
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.lightBlueAccent,
+        color: Colors.blue[600],
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -61,7 +74,7 @@ class SidebarButton extends StatelessWidget {
           ),
         ),
         onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context, navigateToRoute,
+            context, shouldNavigateToSecondRoute! ? navigateToSecondRoute! : navigateToRoute,
             ModalRoute.withName(kHomeRoute)
         )
       ),
