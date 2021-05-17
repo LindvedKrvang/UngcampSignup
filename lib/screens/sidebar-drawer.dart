@@ -74,7 +74,9 @@ class SidebarButton extends StatelessWidget {
           ),
         ),
         onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context, shouldNavigateToSecondRoute! ? navigateToSecondRoute! : navigateToRoute,
+            context, shouldNavigateToSecondRoute != null && shouldNavigateToSecondRoute!
+              ? navigateToSecondRoute!
+              : navigateToRoute,
             ModalRoute.withName(kHomeRoute)
         )
       ),

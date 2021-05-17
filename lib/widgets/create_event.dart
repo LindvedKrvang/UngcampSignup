@@ -168,7 +168,8 @@ class _CreateEventState extends State<CreateEvent> {
                 TextButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Event event = Event(
+                      UcEvent event = UcEvent(
+                        key: 'tmp',
                         organizerId: organizerId,
                         title: _titleController.text,
                         type: _typeController.text,

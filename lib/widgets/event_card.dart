@@ -3,7 +3,7 @@ import 'package:ungcamp_signup/models/event.dart';
 
 class EventCard extends StatelessWidget {
 
-  final Event event;
+  final UcEvent event;
 
   EventCard({required this.event});
 
