@@ -1,1 +1,0 @@
-const kEventsKey = 'Events';

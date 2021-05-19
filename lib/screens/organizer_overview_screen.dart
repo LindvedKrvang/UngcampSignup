@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:ungcamp_signup/models/auth-details.dart';
-import 'package:ungcamp_signup/models/database_constants.dart';
+import 'package:ungcamp_signup/authentication/authentication.dart';
+import 'package:ungcamp_signup/database/database.dart';
 import 'package:ungcamp_signup/models/event.dart';
 import 'package:ungcamp_signup/models/routes.dart';
 import 'package:ungcamp_signup/screens/sidebar-drawer.dart';
@@ -20,26 +18,21 @@ class OrganizerOverview extends StatefulWidget {
 
 class _OrganizerOverviewState extends State<OrganizerOverview> {
 
-  final _auth = FirebaseAuth.instance;
-  final _database = FirebaseDatabase.instance.reference();
+  final _auth = Authentication();
+  final _database = Database();
 
-  late StreamSubscription<Event> _eventsSubscription;
+  late StreamSubscription<UcEvent> _eventsSubscription;
 
   List<UcEvent> _ucEvents = [];
-
-  User? _currentUser;
 
   @override
   void initState() {
     super.initState();
-    _currentUser = _auth.currentUser;
     _eventsSubscription = _database
-        .child(kEventsKey)
-        .onChildAdded
+        .getUcEventAddedStream()
         .listen((event) {
-          print(event.snapshot.value);
            setState(() {
-             _ucEvents.add(UcEvent.fromJson(event.snapshot.key, event.snapshot.value));
+             _ucEvents.add(event);
            });
         });
   }
@@ -51,22 +44,15 @@ class _OrganizerOverviewState extends State<OrganizerOverview> {
   }
 
 
-  void signOutAsOrganizer() {
-    // By signing in as the anonymous user, we automatically sign out as Organizer.
-    _auth.signInWithEmailAndPassword(email: kAnonymousUserEmail, password: kAnonymousUserPassword);
+  void signOutClicked() {
+    _auth.signOut();
     Navigator.popAndPushNamed(context, kEventsRoute);
   }
 
   void _createEvent(UcEvent ucEvent) {
-    _database.reference().child(kEventsKey).push().set({
-    'organizerId': ucEvent.organizerId,
-    'title': ucEvent.title,
-    'type': ucEvent.type,
-    'description': ucEvent.description,
-    'author': ucEvent.author,
-    'atTime': ucEvent.atTime,
-    'atDate': ucEvent.atDate,
-    'maxParticipants': ucEvent.maxParticipants
+    _database.saveUcEvent(ucEvent);
+    setState(() {
+      _ucEvents.add(ucEvent);
     });
   }
 
@@ -79,7 +65,7 @@ class _OrganizerOverviewState extends State<OrganizerOverview> {
             Text('Ungcamp - Organizer'),
             Expanded(child: Container()),
             ElevatedButton(
-              onPressed: () => signOutAsOrganizer(),
+              onPressed: () => signOutClicked(),
               child: Text('Sign out'),
               style: TextButton.styleFrom(
                 backgroundColor: Colors.blueAccent[100]
@@ -97,12 +83,9 @@ class _OrganizerOverviewState extends State<OrganizerOverview> {
             context: context,
             builder: (BuildContext context) => SingleChildScrollView(
               child: CreateEvent(
-                organizerId: _currentUser!.uid,
+                organizerId: _auth.getCurrentUser()!.uid,
                 onSave: (ucEvent) {
                   _createEvent(ucEvent);
-                  setState(() {
-                    _ucEvents.add(ucEvent);
-                  });
                   Navigator.pop(context);
               }),
             ),

@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ungcamp_signup/models/auth-details.dart';
+import 'package:ungcamp_signup/authentication/authentication.dart';
 import 'package:ungcamp_signup/models/routes.dart';
 import 'package:ungcamp_signup/screens/sidebar-drawer.dart';
 
@@ -14,7 +13,7 @@ class OrganizerLogin extends StatefulWidget {
 
 class _OrganizerLoginState extends State<OrganizerLogin> {
 
-  final _auth = FirebaseAuth.instance;
+  final _auth = Authentication();
 
   late String _email;
   late String _password;
@@ -26,7 +25,7 @@ class _OrganizerLoginState extends State<OrganizerLogin> {
 
   void loginAsOrganizer() {
     try {
-      _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      _auth.signInUser(email: _email, password: _password);
       Navigator.popAndPushNamed(context, kOrganizerOverviewRoute);
     } catch (error) {
       // TODO: Add proper error handling for logging in

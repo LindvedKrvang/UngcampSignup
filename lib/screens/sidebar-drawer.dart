@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ungcamp_signup/models/auth-details.dart';
+import 'package:ungcamp_signup/authentication/authentication.dart';
 import 'package:ungcamp_signup/models/routes.dart';
 
 class SidebarDrawer extends StatelessWidget {
   SidebarDrawer({Key? key}) : super(key: key);
 
-  final _auth = FirebaseAuth.instance;
+  final _auth = Authentication();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class SidebarDrawer extends StatelessWidget {
               title: 'For organizers',
               navigateToRoute: kOrganizerLoginRoute,
               navigateToSecondRoute: kOrganizerOverviewRoute,
-              shouldNavigateToSecondRoute: _auth.currentUser != null && _auth.currentUser!.email != kAnonymousUserEmail,
+              shouldNavigateToSecondRoute: _auth.isCurrentUserAnonymous(),
             )
           ],
         ),

@@ -21,7 +21,7 @@ class UcEvent {
     required this.atDate,
     required this.maxParticipants
   });
-  
+
   UcEvent.fromJson(this.key, Map data) {
     organizerId = data['organizerId'];
     title = data['title'];
